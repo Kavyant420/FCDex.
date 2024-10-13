@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Squad Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0F0F0F;
+            color: #F0F0F0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .position {
+            background-color: red;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+            width: 300px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        input {
+            background-color: #333;
+            color: #F0F0F0;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+            width: 180px;
+        }
+        button {
+            margin-top: 20px;
+            background-color: red;
+            color: #F0F0F0;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: box-shadow 0.3s ease;
+        }
+        button:hover {
+            box-shadow: 0 0 15px purple;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Squad Builder</h1>
+    <div id="webhook">
+        <label>Enter a webhook URL from your discord server:</label>
+        <input id="webhookUrl" placeholder="Webhook URL">
+    </div>
+    <div id="squad">
+        <div class="position">
+            <span>Goalkeeper:</span>
+            <input type="text" placeholder="Player Name" id="goalkeeper">
+        </div>
+        <div class="position">
+            <span>Defender 1:</span>
+            <input type="text" placeholder="Player Name" id="defender1">
+        </div>
+        <div class="position">
+            <span>Defender 2:</span>
+            <input type="text" placeholder="Player Name" id="defender2">
+        </div>
+        <div class="position">
+            <span>Defender 3:</span>
+            <input type="text" placeholder="Player Name" id="defender3">
+        </div>
+        <div class="position">
+            <span>Defender 4:</span>
+            <input type="text" placeholder="Player Name" id="defender4">
+        </div>
+        <div class="position">
+            <span>Midfielder 1:</span>
+            <input type="text" placeholder="Player Name" id="midfielder1">
+        </div>
+        <div class="position">
+            <span>Midfielder 2:</span>
+            <input type="text" placeholder="Player Name" id="midfielder2">
+        </div>
+        <div class="position">
+            <span>Midfielder 3:</span>
+            <input type="text" placeholder="Player Name" id="midfielder3">
+        </div>
+        <div class="position">
+            <span>Forward 1:</span>
+            <input type="text" placeholder="Player Name" id="forward1">
+        </div>
+        <div class="position">
+            <span>Forward 2:</span>
+            <input type="text" placeholder="Player Name" id="forward2">
+        </div>
+        <div class="position">
+            <span>Forward 3:</span>
+            <input type="text" placeholder="Player Name" id="forward3">
+        </div>
+    </div>
+
+    <button id="submit">Submit Squad</button>
+
+    <script>
+        document.getElementById("submit").addEventListener("click", function() {
+            const webhookUrl = document.getElementById("webhookUrl").value.trim();
+
+            if (!webhookUrl) {
+                alert('Please enter a webhook URL.');
+                return;
+            }
+
+            const gk = document.getElementById("goalkeeper").value; 
+            const cb1 = document.getElementById('defender1').value; 
+            const cb2 = document.getElementById('defender2').value;
+            const cb3 = document.getElementById('defender3').value;
+            const cb4 = document.getElementById('defender4').value;
+            const m1 = document.getElementById('midfielder1').value;
+            const m2 = document.getElementById('midfielder2').value;
+            const m3 = document.getElementById('midfielder3').value;
+            const f1 = document.getElementById('forward1').value;
+            const f2 = document.getElementById('forward2').value;
+            const f3 = document.getElementById('forward3').value;
+
+            if (!gk) { 
+                alert('Please enter a goalkeeper name.'); 
+                return; 
+            }
+
+            const message = {
+                content: `GK: ${gk}\nLB: ${cb1}\nCB: ${cb2}\nCB: ${cb3}\nRB: ${cb4}\nCM: ${m1}\nCAM: ${m2}\nCM: ${m3}\nLW: ${f1}\nST: ${f2}\nRW: ${f3}`,
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+                body: JSON.stringify(message), 
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(responseText => {
+                alert('Squad submitted successfully!');
+            })
+            .catch((error) => {
+                alert('Failed to submit squad. Please check your webhook URL and try again.');
+            });
+        });
+    </script>
+</body>
+</html>
